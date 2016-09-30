@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="DropBoxDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Console" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="XYv-wq-1oj">
+                                <rect key="frame" x="0.0" y="215" width="600" height="126"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="126" id="WvP-li-5VV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="WYa-WQ-bpA">
+                                <rect key="frame" x="20" y="51" width="560" height="29"/>
+                                <segments>
+                                    <segment title="Library"/>
+                                    <segment title="Document"/>
+                                </segments>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In which folder you want to save the file" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Zj1-fO-e7V">
+                                <rect key="frame" x="20" y="22" width="560" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="append Path : /Folder_Name/Second_FolderName" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8PM-7G-WTk">
+                                <rect key="frame" x="20" y="93" width="560" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LfV-Z8-vNH">
+                                <rect key="frame" x="20" y="131" width="560" height="28"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="Click Here! For Download the File From DropBox"/>
+                                <connections>
+                                    <action selector="linkButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="M7v-Hg-m9D"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="8PM-7G-WTk" secondAttribute="trailing" constant="20" id="5u4-be-xeJ"/>
+                            <constraint firstItem="LfV-Z8-vNH" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="6Z4-jy-YNH"/>
+                            <constraint firstItem="XYv-wq-1oj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="CvB-df-Pmm"/>
+                            <constraint firstItem="Zj1-fO-e7V" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="2" id="IJZ-Z9-lAW"/>
+                            <constraint firstItem="WYa-WQ-bpA" firstAttribute="top" secondItem="Zj1-fO-e7V" secondAttribute="bottom" constant="8" id="RQg-XA-x18"/>
+                            <constraint firstAttribute="trailing" secondItem="XYv-wq-1oj" secondAttribute="trailing" id="UaQ-5I-KT6"/>
+                            <constraint firstItem="Zj1-fO-e7V" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="XPE-EX-QKc"/>
+                            <constraint firstItem="8PM-7G-WTk" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="cUg-JG-M9W"/>
+                            <constraint firstItem="XYv-wq-1oj" firstAttribute="top" secondItem="LfV-Z8-vNH" secondAttribute="bottom" constant="56" id="cWn-ry-mv2"/>
+                            <constraint firstAttribute="trailing" secondItem="WYa-WQ-bpA" secondAttribute="trailing" constant="20" id="f0p-XB-g1v"/>
+                            <constraint firstItem="8PM-7G-WTk" firstAttribute="top" secondItem="WYa-WQ-bpA" secondAttribute="bottom" constant="14" id="gj6-C0-rt0"/>
+                            <constraint firstAttribute="trailing" secondItem="LfV-Z8-vNH" secondAttribute="trailing" constant="20" id="n8j-4h-Rj1"/>
+                            <constraint firstItem="WYa-WQ-bpA" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="oRf-ds-3M6"/>
+                            <constraint firstAttribute="trailing" secondItem="Zj1-fO-e7V" secondAttribute="trailing" constant="20" id="prK-Fr-D8A"/>
+                            <constraint firstItem="LfV-Z8-vNH" firstAttribute="top" secondItem="WYa-WQ-bpA" secondAttribute="bottom" constant="52" id="rIG-IW-Ryp"/>
+                            <constraint firstItem="LfV-Z8-vNH" firstAttribute="top" secondItem="8PM-7G-WTk" secondAttribute="bottom" constant="8" id="rLz-q3-Yqf"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="segmentBar" destination="WYa-WQ-bpA" id="iLz-Vd-7zT"/>
+                        <outlet property="textFieldPath" destination="8PM-7G-WTk" id="5WW-4a-ceY"/>
+                        <outlet property="txtView" destination="XYv-wq-1oj" id="xVG-Dx-PpT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="382" y="330"/>
+        </scene>
+    </scenes>
+</document>
