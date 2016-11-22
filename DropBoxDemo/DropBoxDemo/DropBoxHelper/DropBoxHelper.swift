@@ -6,24 +6,24 @@
 //  Copyright © 2016 Prabhjot Singh. All rights reserved.
 //
 
-internal typealias DropBoxFileDataClosure = (obj: FileDropBox?, isSuccess: Bool) -> Void
+internal typealias DropBoxFileDataClosure = (_ obj: FileDropBox?, _ isSuccess: Bool) -> Void
 
 /**
  *  Model of a DropBox File
  */
 struct  FileDropBox {
-    var fileDownloadLink: NSURL? // url of file
+    var fileDownloadLink: URL? // url of file
     var fileName: String? // name of the file
     var fileSize: Int64? // size of the File
-    var iconURL: NSURL? // url of the icon
+    var iconURL: URL? // url of the icon
     var isDownloadedOnLocal: Bool? // bool variable will check if the file is downloaded or not
     var localPath: String? // path(local) of the file where it downloads
-    var fileData: NSData? // data of the file
+    var fileData: Data? // data of the file
     var fileType: String? { // extension of the file
         get {
             if fileName != nil {
-                if fileName!.componentsSeparatedByString(".").count > 1 {
-                    return fileName?.componentsSeparatedByString(".").last!
+                if fileName!.components(separatedBy: ".").count > 1 {
+                    return fileName?.components(separatedBy: ".").last!
                 } else {
                     return ""
                 }
@@ -44,20 +44,20 @@ struct  FileDropBox {
  - Document:      case which is used to fetch the document path and can append the path by appending the string
  */
 enum FileDirectories {
-    case Library(apendPath: String)
-    case Document(apendPath: String)
+    case library(apendPath: String)
+    case document(apendPath: String)
     
     /**
      fetch the path and returns string
      - returns: pathh in string
      */
-    private func fullPath() -> String {
+    fileprivate func fullPath() -> String {
         switch self {
-        case let .Library(path):
-            let dirPath = self.getPath(.LibraryDirectory)
+        case let .library(path):
+            let dirPath = self.getPath(.libraryDirectory)
             return("\(dirPath)/\(path)")
-        case let .Document(path):
-            let dirPath = self.getPath(.DocumentDirectory)
+        case let .document(path):
+            let dirPath = self.getPath(.documentDirectory)
             return("\(dirPath)/\(path)")
 
         }
@@ -67,8 +67,8 @@ enum FileDirectories {
      - parameter serachPath: NSSearchPathDirectory object
      - returns: returns string path
      */
-    private func getPath(serachPath: NSSearchPathDirectory) -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(serachPath, .UserDomainMask, true)
+    fileprivate func getPath(_ serachPath: FileManager.SearchPathDirectory) -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(serachPath, .userDomainMask, true)
         return paths[0]
     }
 }
@@ -77,10 +77,10 @@ enum FileDirectories {
 class DropBoxHelper {
     
 // Private variables
-    private var dropBoxFileClosure: DropBoxFileDataClosure? // closure which calls back the FileDropBox model and success bool when file downloaded or failure
-    private var pathToSave: FileDirectories? // enum which will fetch the ios library and document path
-    private var delegate: UIViewController? // controller object
-    private var maxDownloadLimitInMB: Int64 { // variable which converts the KB into MB
+    fileprivate var dropBoxFileClosure: DropBoxFileDataClosure? // closure which calls back the FileDropBox model and success bool when file downloaded or failure
+    fileprivate var pathToSave: FileDirectories? // enum which will fetch the ios library and document path
+    fileprivate var delegate: UIViewController? // controller object
+    fileprivate var maxDownloadLimitInMB: Int64 { // variable which converts the KB into MB
         get {
             return fileLimitInMB * 1000000
         }
@@ -110,7 +110,7 @@ class DropBoxHelper {
      
      - returns: DropBoxHelper object
      */
-    init (pathToSave: FileDirectories = .Document(apendPath: ""), controller: UIViewController, dropBoxFileDataClosure: DropBoxFileDataClosure) {
+    init (pathToSave: FileDirectories = .document(apendPath: ""), controller: UIViewController, dropBoxFileDataClosure: @escaping DropBoxFileDataClosure) {
         self.pathToSave = pathToSave
         self.dropBoxFileClosure = dropBoxFileDataClosure
         self.delegate = controller
@@ -124,7 +124,7 @@ class DropBoxHelper {
      - parameter controller:             controller object
      - parameter dropBoxFileDataClosure: closure which calls back the FileDropBox model and success bool when file downloaded or failure
      */
-    internal func getFileDataFromDropBox(pathToSave: FileDirectories = .Document(apendPath: ""), controller: UIViewController, dropBoxFileDataClosure: DropBoxFileDataClosure) {
+    internal func getFileDataFromDropBox(_ pathToSave: FileDirectories = .document(apendPath: ""), controller: UIViewController, dropBoxFileDataClosure: @escaping DropBoxFileDataClosure) {
         self.pathToSave = pathToSave
         self.dropBoxFileClosure = dropBoxFileDataClosure
         self.delegate = controller
@@ -134,33 +134,33 @@ class DropBoxHelper {
     /**
      used to fetch the file metadata data from dropbox
      */
-    private func fetchFileDataFromDBChooser() {
-        DBChooser.defaultChooser().openChooserForLinkType(DBChooserLinkTypeDirect, fromViewController: delegate) { (results) in
-            guard let resultsArray = results as? [DBChooserResult] where resultsArray.count > 0 else {
-                self.dropBoxFileClosure!(obj: nil, isSuccess: false)
+    fileprivate func fetchFileDataFromDBChooser() {
+        DBChooser.default().open(for: DBChooserLinkTypeDirect, from: delegate) { (results) in
+            guard let resultsArray = results as? [DBChooserResult], resultsArray.count > 0 else {
+                self.dropBoxFileClosure!(nil, false)
                 return
             }
             
             var fileDropBox = self.setFileDropBoxObj(resultsArray[0])
             
             if self.hasLimitedSize(fileDropBox.fileSize!) == false || self.hasRestrictedFileType(fileDropBox.fileType!) == false {
-                self.dropBoxFileClosure!(obj: nil, isSuccess: false)
+                self.dropBoxFileClosure!(nil, false)
                 return
             }
             
-            self.downloadTheFileAsync(fileDropBox, dataHandler: { (fileData: NSData?, success: Bool) in
+            self.downloadTheFileAsync(fileDropBox, dataHandler: { (fileData: Data?, success: Bool) in
                 if success == true {
                     fileDropBox.fileData = fileData
-                    fileDropBox.localPath = fileDropBox.localPath!.stringByReplacingOccurrencesOfString("//", withString: "/")
+                    fileDropBox.localPath = fileDropBox.localPath!.replacingOccurrences(of: "//", with: "/")
                     
                     if self.isSaveDataToLocal(fileDropBox) == true {
                         fileDropBox.isDownloadedOnLocal = true
-                        self.dropBoxFileClosure!(obj: fileDropBox, isSuccess: true)
+                        self.dropBoxFileClosure!(fileDropBox, true)
                     } else {
-                        self.dropBoxFileClosure!(obj: fileDropBox, isSuccess: false)
+                        self.dropBoxFileClosure!(fileDropBox, false)
                     }
                 } else {
-                    self.dropBoxFileClosure!(obj: fileDropBox, isSuccess: false)
+                    self.dropBoxFileClosure!(fileDropBox, false)
                     return
                 }
             })
@@ -176,7 +176,7 @@ class DropBoxHelper {
      - returns: returns true and false
      */
     
-    private func hasLimitedSize(fileSize: Int64) -> Bool {
+    fileprivate func hasLimitedSize(_ fileSize: Int64) -> Bool {
         if fileSize >= self.maxDownloadLimitInMB {
             let errorMessage = "Downloadable file should not more than \(self.fileLimitInMB) MB size"
             print(errorMessage)
@@ -194,7 +194,7 @@ class DropBoxHelper {
      
      - returns: if array contains the type the it will return false otherwise 0
      */
-    private func hasRestrictedFileType(fileType: String) -> Bool {
+    fileprivate func hasRestrictedFileType(_ fileType: String) -> Bool {
         if self.restrictedExtenstions != nil {
             if self.restrictedExtenstions!.contains(fileType) {
                 let errorMessage = "\(fileType) is restricted"
@@ -213,7 +213,7 @@ class DropBoxHelper {
      
      - returns: FileDropBox object
      */
-    private func setFileDropBoxObj(dbChooser: DBChooserResult) -> FileDropBox {
+    fileprivate func setFileDropBoxObj(_ dbChooser: DBChooserResult) -> FileDropBox {
         return  FileDropBox(fileDownloadLink: dbChooser.link, fileName: dbChooser.name, fileSize: dbChooser.size, iconURL: dbChooser.iconURL, isDownloadedOnLocal: false, localPath: pathToSave!.fullPath(), fileData: nil)
     }
     
@@ -223,22 +223,23 @@ class DropBoxHelper {
      - parameter fileDropBox: FileDropBox object
      - parameter dataHandler: which handles the nsadata and download status
      */
-    private func downloadTheFileAsync(fileDropBox: FileDropBox, dataHandler: (fileData: NSData?, success: Bool) -> Void) {
+    fileprivate func downloadTheFileAsync(_ fileDropBox: FileDropBox, dataHandler: @escaping (_ fileData: Data?, _ success: Bool) -> Void) {
         
         if fileDropBox.fileDownloadLink != nil {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                    
-                    let fileData =  NSData(contentsOfURL: fileDropBox.fileDownloadLink!)
-                    dispatch_sync(dispatch_get_main_queue(), {
-                            if fileData!.length > 0 {
-                                dataHandler(fileData: fileData, success: true)
-                            } else {
-                                dataHandler(fileData: nil, success: false)
-                            }
-                        })
+            
+            DispatchQueue.global().async {
+                let fileData =  try? Data(contentsOf: fileDropBox.fileDownloadLink!)
+                DispatchQueue.main.sync(execute: {
+                    if fileData!.count > 0 {
+                        dataHandler(fileData, true)
+                    } else {
+                        dataHandler(nil, false)
+                    }
                 })
+            }
+            
         } else {
-            dataHandler(fileData: nil, success: false)
+            dataHandler(nil, false)
         }
     }
     
@@ -249,11 +250,11 @@ class DropBoxHelper {
      
      - returns: bool which tells file successfully saved in file or not
      */
-    private func isSaveDataToLocal(fileObj: FileDropBox) -> Bool {
+    fileprivate func isSaveDataToLocal(_ fileObj: FileDropBox) -> Bool {
         if createFolderIfNotExist(fileObj.localPath!) {
             var fullPath = fileObj.localPath! + "/\(fileObj.fileName!)"
-            fullPath = fullPath.stringByReplacingOccurrencesOfString("//", withString: "/")
-            return fileObj.fileData!.writeToFile(fullPath, atomically: true)
+            fullPath = fullPath.replacingOccurrences(of: "//", with: "/")
+            return ((try? fileObj.fileData!.write(to: URL(fileURLWithPath: fullPath), options: [.atomic])) != nil)
         } else {
             return false
         }
@@ -266,11 +267,11 @@ class DropBoxHelper {
      
      - returns: if not able to create the directories the returns false otherwise true
      */
-    private func createFolderIfNotExist(filePath: String) -> Bool {
+    fileprivate func createFolderIfNotExist(_ filePath: String) -> Bool {
         
-        if !NSFileManager.defaultManager().fileExistsAtPath(filePath) {
+        if !FileManager.default.fileExists(atPath: filePath) {
             do {
-                try NSFileManager.defaultManager().createDirectoryAtPath(filePath, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                 return true
             } catch let createDirectoryError as NSError {
                 print("Error with creating directory at path: \(createDirectoryError.localizedDescription)")
@@ -287,13 +288,13 @@ class DropBoxHelper {
      - parameter title:   alert Title
      - parameter message: alert Message
      */
-    private func showAlert(title: String, message: String) {
+    fileprivate func showAlert(_ title: String, message: String) {
         
         if NSClassFromString("UIAlertController") != nil { // Check if UIAlertController class exists
-            let alertController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-            let alertAction: UIAlertAction = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+            let alertController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let alertAction: UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
             alertController.addAction(alertAction)
-            self.delegate?.presentViewController(alertController, animated: true, completion: nil)
+            self.delegate?.present(alertController, animated: true, completion: nil)
         } else {
             let alertView = UIAlertView(title: title, message: message, delegate: self.delegate, cancelButtonTitle: "Ok")
             alertView.show()

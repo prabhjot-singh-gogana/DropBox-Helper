@@ -26,8 +26,8 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func linkButtonPressed(sender: AnyObject) {
-        let pathEnum = segmentBar.selectedSegmentIndex == 0 ? FileDirectories.Library(apendPath: "\(textFieldPath.text!)") : FileDirectories.Document(apendPath: "\(textFieldPath.text!)")
+    @IBAction func linkButtonPressed(_ sender: AnyObject) {
+        let pathEnum = segmentBar.selectedSegmentIndex == 0 ? FileDirectories.library(apendPath: "\(textFieldPath.text!)") : FileDirectories.document(apendPath: "\(textFieldPath.text!)")
         
         dropBoxHelper.fileLimitInMB = 10 //variable which checks the limit of the file in MB
         dropBoxHelper.restrictedExtenstions = ["txt"]
@@ -51,10 +51,10 @@ class ViewController: UIViewController {
     }
 
     func showListOfDirectories() {
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default
         do {
-            let docsArray = try fileManager.subpathsOfDirectoryAtPath(NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0])
-            let libArray = try fileManager.subpathsOfDirectoryAtPath(NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)[0])
+            let docsArray = try fileManager.subpathsOfDirectory(atPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+            let libArray = try fileManager.subpathsOfDirectory(atPath: NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0])
             let docsList = "Document = \(docsArray.debugDescription)"
             let libList = "Library = \(libArray.debugDescription)"
             txtView.text = "\(docsList)\n\(libList)"

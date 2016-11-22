@@ -249,9 +249,11 @@
 				TargetAttributes = {
 					8086F8D81D4B1D1D00FDC5A1 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0810;
 					};
 					8086F8EC1D4B1D1D00FDC5A1 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0810;
 						TestTargetID = 8086F8D81D4B1D1D00FDC5A1;
 					};
 				};
@@ -481,6 +483,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.netsolutions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/DropBoxDemo/DropBoxDemo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -498,6 +501,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.netsolutions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/DropBoxDemo/DropBoxDemo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -509,6 +513,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Prabhjot-Singh.DropBoxDemoTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DropBoxDemo.app/DropBoxDemo";
 			};
 			name = Debug;
@@ -521,6 +526,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Prabhjot-Singh.DropBoxDemoTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DropBoxDemo.app/DropBoxDemo";
 			};
 			name = Release;
